@@ -21,15 +21,15 @@ public class GameManager : MonoBehaviour
         Debug.Log($" ******** Now this Fram have Animal {animalName.Count} *******");
 
         
-        cow.Init("Sakura" , 35, 20);
+        cow.Init("Sakura");
         farmanimal.Add(cow);
 
         
-        chicken.Init("Suo", 20, 15);
+        chicken.Init("Suo");
         farmanimal.Add(chicken);
 
         
-        sheep.Init("Noya", 25, 10);
+        sheep.Init("Noya");
         farmanimal.Add(sheep);
 
         
@@ -39,21 +39,30 @@ public class GameManager : MonoBehaviour
             animals.Status();
         }
 
+        chicken.Sleep();
+        chicken.Status();
+
+        cow.Moo();
+        cow.Status();
+
         foreach (var feedAnimal in farmanimal)
         {
             feedAnimal.Makesound();
             feedAnimal.Feed(8);
         }
 
-        chicken.Feeds("Grain" , 7);
-        chicken.Sleep();
-        chicken.Status();
+        sheep.Product();
 
-        cow.Feeds("Hay", 10);
-        cow.Moo();
-        cow.Status();
+        cow.Feed1(10);
+        cow.Feeds(FoodType.Hay, 10);
+        cow.Product();
+        cow.Feeds(FoodType.Hay, 10);
+        cow.Product();
 
-        sheep.Feeds("Pasture" , 9);
-        sheep.Status();
+        sheep.Feeds(FoodType.RottenFood, 10);
+
+        chicken.Feeds(FoodType.AnimalFood, 20);
+
+        chicken.Product();
     }
 }

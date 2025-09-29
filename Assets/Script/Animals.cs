@@ -1,71 +1,113 @@
 using UnityEngine;
+using UnityEngine.TextCore.Text;
+
+public enum FoodType
+    {
+        Hay,
+        Grain,
+        Herbivore,
+        RottenFood,
+        AnimalFood
+    }
 
 public abstract class Animals : MonoBehaviour
 {
-    public string Name;
+    //public int maxH = 100;
 
-    private int hunger;
-    public int Hunger
-    {
-        get { return hunger; }
-        set
-        {
-            if (value < 0) hunger = 0;
-            else if (value > 50) hunger = 50;
-            else hunger = value;
-        }
-    }
+    public string Name { get; private set ;}
 
-    private int happiness;
-    public int Happiness
-    {
-        get { return happiness; }
-        set
-        {
-            if (value < 0) happiness = 0;
-            else if (value > 50) happiness = 50;
-            else happiness = value;
-        }
-    }
+    public int Hunger { get; private set; }
+   
+    public int Happiness { get; private set; }
 
-    public virtual void Init(string newName, int newHunger, int newHappiness)
+    public FoodType foodType { get; protected set; } 
+
+    public virtual void Init(string newName)
     {
         Name = newName;
-        hunger = newHunger;
-        happiness = newHappiness;
+        Happiness = 50;
+        Hunger = 50;
+        
     }
 
     public void AdjustHunger(int hunger)
     {
-        Hunger += hunger;
+        Hunger = Mathf.Clamp(Hunger + hunger, 0, 100);
     }
 
     public void AdjustHappiness(int happy)
     {
-        Happiness += happy;
+        Happiness = Mathf.Clamp(Happiness + happy, 0, 100);
     }
 
     public virtual void Status()
     {
-        Debug.Log($"{Name} happy : {Happiness} | hunger : {Hunger}");
+        Debug.Log($"{Name} happy : {Happiness} | hunger : {Hunger} | Prefered Food {foodType}");
     }
 
-    public virtual void Makesound()
-    {
-        Debug.Log(" Animal Make sound ");
-    }
+    public abstract void Makesound();
 
     public void Feed(int feed)
     {
-        happiness += feed;
-        hunger -= feed;
-        Debug.Log($"{Name} Received food in portions of {feed}");
+        Hunger -= feed;
+        Happiness += feed;
+        Debug.Log($"{Name} was eats food {feed} unit | Current Happy : {Happiness}");
     }
 
-    public  void Feeds(string nameFeed, int feedAnimal) 
+    public void Feed1(int feed)
     {
-        happiness += feedAnimal;
-        hunger -= feedAnimal;
-        Debug.Log($"{Name} was fed of {nameFeed} {feedAnimal} unit" );
+        //Happiness += feed;
+        Hunger -= feed;
+
+        int Happpy = feed / 2;
+        Happiness += Happpy;
+
+        Debug.Log($"{Name} Received general food in portions of {feed} unit | Current Happy : {Happiness}");
     }
+
+    public  void Feeds(FoodType foodTypes, int food) 
+    {
+        switch (foodTypes)
+        {
+
+
+            case FoodType.Hay:
+                Hunger -= food;
+                if (foodTypes == foodType)
+                {
+                    AdjustHappiness(15);
+                }
+                Debug.Log($"{Name} was very happy to eat {food} unit of Hay, Current Happy : {Happiness} and Current Hungy : {Hunger}");
+                break;
+
+            case FoodType.Grain:
+                Hunger -= food;
+                if (foodTypes == foodType)
+                {
+                    AdjustHappiness(15);
+                }
+                Debug.Log($"{Name} was very happy to eat {food} unit of Grain, Current Happy : {Happiness} and Current Hungy : {Hunger}");
+                break;
+
+            case FoodType.Herbivore:
+                Hunger -= food;
+                if (foodTypes == foodType)
+                {
+                    AdjustHappiness(15);
+                }
+                Debug.Log($"{Name} was very happy to eat {food} unit of Herbivore, Current Happy : {Happiness} and Current Hungy : {Hunger}");
+                break;
+
+            case FoodType.RottenFood:
+                AdjustHappiness(-60);
+                Debug.Log($"{Name} eat rotten food and now {Name} Unhappy, Current happy {Happiness} and hungy : {Hunger}");
+                break;
+
+            case FoodType.AnimalFood:
+                Feed(food);
+                break;
+        }
+    }
+
+    public abstract string Product();
 }
